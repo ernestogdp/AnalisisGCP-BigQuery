@@ -1,0 +1,14 @@
+###############################################
+Descarga dataset utilizado para el proyecto TFG
+###############################################
+
+
+##############
+Taxi_trips.csv
+##############
+
+Info: Dataset Oficial con la información de los viajes en taxi de la ciudad de Chicago.
+Tamaño: 80GB
+
+Enlace Oficial de descarga:
+https://data.cityofchicago.org/api/views/wrvz-psew/rows.csv?accessType=DOWNLOAD 
