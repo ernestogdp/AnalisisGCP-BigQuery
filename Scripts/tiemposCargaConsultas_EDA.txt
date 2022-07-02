@@ -1,0 +1,184 @@
+El siguiente script documentará todas las querys que se han desarrollado para realizar las consultas en BigQuery que han sido necesarias para el análisis EDA.
+
+#Conocer el rango de fechas de todos los registros.
+
+SELECT MIN(trip_start_timestamp) fecha_inicial, 
+       MAX(trip_start_timestamp) fecha_final  
+FROM dbo_chicago_taxitrips.taxi_trips
+
+#### QUERYS URILIZADAS PARA EL PROCESO DE EDA EN EL DATASET dbo_chicago_taxitrips y tiempos de consulta con el motor de búsqueda de Google BigQuery ####
+
+#COUNT
+
+SELECT 	COUNT(trip_start_timestamp) AS trip_start_count,
+	COUNT(trip_end_timestamp) AS trip_end_count,
+	COUNT(trip_seconds) AS trip_seconds_count,
+	COUNT(trip_miles) AS trip_miles_count,
+	COUNT(pickup_census_tract) AS pickup_census_tract_count,
+	COUNT(dropoff_census_tract) AS dropoff_census_tract_count,
+	COUNT(pickup_community_area) AS pickup_community_area_count,
+	COUNT(dropoff_community_area) AS dropoff_community_area_count,
+	COUNT(fare) AS fare_count,
+	COUNT(tips) AS tips_count,
+	COUNT(tolls) AS tolls_count,
+	COUNT(extras) AS extras_count,
+	COUNT(trip_total) AS trip_total_count,
+	COUNT(pickup_latitude) AS pickup_latitude_count,
+	COUNT(pickup_longitude) AS pickup_longitude_count,
+	COUNT(dropoff_latitude) AS dropoff_latitude_count,
+	COUNT(dropoff_longitude) AS dropoff_longitude_count
+FROM dbo_chicago_taxitrips.taxi_trips
+
+
+#----------------------------------------------------------------
+
+#CARD  |   Número de valores distintos de cada campo
+
+SELECT 	COUNT(DISTINCT(trip_start_timestamp)) AS trip_start_Ndistinct,
+	COUNT(DISTINCT(trip_end_timestamp)) AS trip_end_Ndistinct,
+	COUNT(DISTINCT(trip_seconds)) AS trip_seconds_Ndistinct,
+	COUNT(DISTINCT(trip_miles)) AS trip_miles_Ndistinct,
+	COUNT(DISTINCT(pickup_census_tract)) AS pickup_census_tract_Ndistinct,
+	COUNT(DISTINCT(dropoff_census_tract)) AS dropoff_census_tract_Ndistinct,
+	COUNT(DISTINCT(pickup_community_area)) AS pickup_community_area_Ndistinct,
+	COUNT(DISTINCT(dropoff_community_area)) AS dropoff_community_area_Ndistinct,
+	COUNT(DISTINCT(fare)) AS fare_Ndistinct,
+	COUNT(DISTINCT(tips)) AS tips_Ndistinct,
+	COUNT(DISTINCT(tolls)) AS tolls_Ndistinct,
+	COUNT(DISTINCT(extras)) AS extras_Ndistinct,
+	COUNT(DISTINCT(trip_total)) AS trip_total_Ndistinct,
+	COUNT(DISTINCT(pickup_latitude)) AS pickup_latitude_Ndistinct,
+	COUNT(DISTINCT(pickup_longitude)) AS pickup_longitude_Ndistinct,
+	COUNT(DISTINCT(dropoff_latitude)) AS dropoff_latitude_Ndistinct,
+	COUNT(DISTINCT(dropoff_longitude)) AS dropoff_longitude_Ndistinct
+FROM dbo_chicago_taxitrips.taxi_trips
+
+#Se ha completado la consulta (tiempo transcurrido: 16,5 s; bytes procesados: 22,2 GB)
+
+#----------------------------------------------------------------
+
+#MIN
+
+SELECT 	MIN(trip_start_timestamp) AS trip_start_MIN,
+	MIN(trip_end_timestamp) AS trip_end_MIN,
+	MIN(trip_seconds) AS trip_seconds_MIN,
+	MIN(trip_miles) AS trip_miles_MIN,
+	MIN(pickup_census_tract) AS pickup_census_tract_MIN,
+	MIN(dropoff_census_tract) AS dropoff_census_tract_MIN,
+	MIN(pickup_community_area) AS pickup_community_area_MIN,
+	MIN(dropoff_community_area) AS dropoff_community_area_MIN,
+	MIN(fare) AS fare_MIN,
+	MIN(tips) AS tips_MIN,
+	MIN(tolls) AS tolls_MIN,
+	MIN(extras) AS extras_MIN,
+	MIN(trip_total) AS trip_total_MIN,
+	MIN(pickup_latitude) AS pickup_latitude_MIN,
+	MIN(pickup_longitude) AS pickup_longitude_MIN,
+	MIN(dropoff_latitude) AS dropoff_latitude_MIN,
+	MIN(dropoff_longitude) AS dropoff_longitude_MIN
+FROM dbo_chicago_taxitrips.taxi_trips
+
+#Se ha completado la consulta (tiempo transcurrido: 1,5 s; bytes procesados: 22,2 GB)
+
+#----------------------------------------------------------------
+
+#MAX
+
+SELECT 	MAX(trip_start_timestamp) AS trip_start_MAX,
+	MAX(trip_end_timestamp) AS trip_end_MAX,
+	MAX(trip_seconds) AS trip_seconds_MAX,
+	MAX(trip_miles) AS trip_miles_MAX,
+	MAX(pickup_census_tract) AS pickup_census_tract_MAX,
+	MAX(dropoff_census_tract) AS dropoff_census_tract_MAX,
+	MAX(pickup_community_area) AS pickup_community_area_MAX,
+	MAX(dropoff_community_area) AS dropoff_community_area_MAX,
+	MAX(fare) AS fare_MAX,
+	MAX(tips) AS tips_MAX,
+	MAX(tolls) AS tolls_MAX,
+	MAX(extras) AS extras_MAX,
+	MAX(trip_total) AS trip_total_MAX,
+	MAX(pickup_latitude) AS pickup_latitude_MAX,
+	MAX(pickup_longitude) AS pickup_longitude_MAX,
+	MAX(dropoff_latitude) AS dropoff_latitude_MAX,
+	MAX(dropoff_longitude) AS dropoff_longitude_MAX
+FROM dbo_chicago_taxitrips.taxi_trips
+
+#Se ha completado la consulta (tiempo transcurrido: 1,5 s; bytes procesados: 22,2 GB)
+
+#----------------------------------------------------------------
+
+#MEAN
+
+SELECT 	
+	AVG(trip_seconds) AS trip_seconds_AVG,
+	AVG(trip_miles) AS trip_miles_AVG,
+	AVG(pickup_census_tract) AS pickup_census_tract_AVG,
+	AVG(dropoff_census_tract) AS dropoff_census_tract_AVG,
+	AVG(pickup_community_area) AS pickup_community_area_AVG,
+	AVG(dropoff_community_area) AS dropoff_community_area_AVG,
+	AVG(fare) AS fare_AVG,
+	AVG(tips) AS tips_AVG,
+	AVG(tolls) AS tolls_AVG,
+	AVG(extras) AS extras_AVG,
+	AVG(trip_total) AS trip_total_AVG,
+	AVG(pickup_latitude) AS pickup_latitude_AVG,
+	AVG(pickup_longitude) AS pickup_longitude_AVG,
+	AVG(dropoff_latitude) AS dropoff_latitude_AVG,
+	AVG(dropoff_longitude) AS dropoff_longitude_AVG
+FROM dbo_chicago_taxitrips.taxi_trips
+
+#Se ha completado la consulta (tiempo transcurrido: 1,6 s; bytes procesados: 19,3 GB)
+
+#----------------------------------------------------------------
+
+#QRT 1st, 2st, 3st
+
+SELECT
+  percentiles[offset(0)] as p0_min,
+  percentiles[offset(25)] as p25,
+  percentiles[offset(50)] as p50,
+  percentiles[offset(75)] as p75,
+  percentiles[offset(100)] as p100_max,
+FROM (
+  SELECT approx_quantiles([Column], 100) percentiles
+  FROM dbo_chicago_taxitrips.taxi_trips
+);
+
+#Se ha completado la consulta (tiempo transcurrido: 1,3 s; bytes procesados: 1,4 GB)
+
+#---------------------------------------------------------------
+
+#Dev
+
+SELECT  STDDEV(trip_seconds),
+        STDDEV(trip_miles),
+        STDDEV(pickup_census_tract),
+        STDDEV(dropoff_census_tract),
+        STDDEV(pickup_community_area),
+        STDDEV(dropoff_community_area),
+        STDDEV(fare),
+        STDDEV(tips),
+        STDDEV(tolls),
+        STDDEV(extras),
+        STDDEV(trip_total),
+        STDDEV(pickup_latitude),
+        STDDEV(pickup_longitude),
+        STDDEV(dropoff_latitude),
+        STDDEV(dropoff_longitude)
+FROM dbo_chicago_taxitrips.taxi_trips
+
+
+#Se ha completado la consulta (tiempo transcurrido: 1,8 s; bytes procesados: 19,3 GB)
+
+#----------------------------------------------------------------
+
+#Mode
+
+SELECT 	company AS Moda
+	COUNT(company) AS Freq
+FROM dbo_chicago_taxitrips.taxi_trips
+GROUP BY company
+ORDER BY Freq DESC LIMIT 1
+
+#Se ha completado la consulta (tiempo transcurrido: 2,8 s; bytes procesados: 1,4 GB)
+

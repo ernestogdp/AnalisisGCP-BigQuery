@@ -1,0 +1,122 @@
+###################################
+--Crear Vista
+
+CREATE OR REPLACE VIEW
+  `ingtelematicatfg.dbo_chicago_taxitrips.V_taxi_trips_LR` AS
+SELECT
+  taxi_id,
+  trip_start_timestamp,
+  trip_end_timestamp,
+  trip_seconds,
+  trip_miles,
+  fare,
+  tips,
+  tolls,
+  extras,
+  trip_total,
+  payment_type,
+  company,
+  pickup_census_tract,
+  dropoff_census_tract,
+  pickup_community_area,
+  dropoff_community_area,
+  CASE
+    WHEN MOD(trip_seconds, 10) < 8 THEN 'training'
+    WHEN MOD(trip_seconds, 10) = 8 THEN 'evaluation'
+    WHEN MOD(trip_seconds, 10) = 9 THEN 'prediction'
+  END AS dataframe,
+  CASE
+    WHEN tips <= 0 OR tips IS NULL THEN 0
+    WHEN tips > 0 THEN 1
+  END AS thereis_tips
+FROM
+  `ingtelematicatfg.dbo_chicago_taxitrips.taxi_trips`
+
+
+Número de filas de dataframe`
+training-->	 182192164
+evalouation-->	   5377749
+prediction--> 	   5344807
+
+
+
+
+####################################################
+--Crear modelo
+
+CREATE OR REPLACE MODEL
+  `ingtelematicatfg.dbo_chicago_taxitrips.taxi_trips_model`
+OPTIONS
+  ( model_type='LOGISTIC_REG',
+    auto_class_weights=TRUE,
+    data_split_method='NO_SPLIT',
+    input_label_cols=['thereis_tips'],
+    max_iterations=15
+  ) AS
+SELECT
+  * EXCEPT(dataframe)
+FROM
+  `ingtelematicatfg.dbo_chicago_taxitrips.V_taxi_trips_LR`
+WHERE
+  dataframe = 'training'
+
+
+La opción input_label_cols especifica qué columna de la declaración SELECT 
+se usará como columna de la etiqueta. Aquí, la columna de la etiqueta es 
+thereis_tips, por lo que el modelo aprenderá cuál de los dos valores de 
+thereis_tips es más probable que se base en los demás valores presentes
+en cada fila.
+
+La opción 'auto_class_weights=TRUE' equilibra las etiquetas de clase en los
+datos de entrenamiento. De forma predeterminada, los datos de entrenamiento
+no están ponderados. Si las etiquetas en los datos de entrenamiento están
+desequilibradas, el modelo puede aprender a predecir en mayor medida la clase 
+de etiquetas más popular. En este caso, la mayoría de los encuestados en el
+conjunto de datos están en el segmento de ingresos más bajos.
+Esto puede ocasionar que un modelo prediga el rango de ingresos más bajos
+con demasiada frecuencia. Los pesos de clase equilibran las etiquetas de 
+clase calculando los pesos de cada clase en proporción inversa a 
+la frecuencia de esa clase.
+
+
+
+##########################################
+Evaluate
+
+SELECT
+  *
+FROM
+  ML.EVALUATE (MODEL `ingtelematicatfg.dbo_chicago_taxitrips.taxi_trips_model`,
+    (
+    SELECT
+      *
+    FROM
+      `ingtelematicatfg.dbo_chicago_taxitrips.V_taxi_trips_LR`
+    WHERE
+      dataframe = 'evaluation'
+    )
+  )
+
+
+resultados:
+{  "precision": "0.94740648325201759",  "recall": "0.99537039609296429",  
+"accuracy": "0.97594885889988547",  "f1_score": "0.97079636526614188",  
+"log_loss": "0.14062785986581422",  "roc_auc": "0.99864535464535464"}
+
+
+##########################################
+Predict
+
+SELECT
+  *
+FROM
+  ML.PREDICT (MODEL `ingtelematicatfg.dbo_chicago_taxitrips.taxi_trips_model`,
+    (
+    SELECT
+      *
+    FROM
+      `ingtelematicatfg.dbo_chicago_taxitrips.V_taxi_trips_LR`
+    WHERE
+      dataframe = 'prediction'
+     )
+  )
